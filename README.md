@@ -70,3 +70,10 @@ Task solution should contain:
 2. Unit tests.
 3. Example of Parquet files.
 4. Generator for creating Parquet files.
+
+### Installation
+Project requires [sbt](https://www.scala-sbt.org/1.x/docs/Setup.html) and [pip](https://pypi.org/project/pip/) 
+installations.
+1. `git clone git@github.com:Samarkina/twitter-subscribers.git`
+2. `sudo pip install names`
+3. `sbt run`

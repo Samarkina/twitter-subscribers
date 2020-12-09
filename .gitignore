@@ -1,3 +1,6 @@
 .idea
+data
 *.class
 *.log
+.DS_Store
+scripts/__pycache__/
