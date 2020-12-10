@@ -1,5 +1,7 @@
 # Twitter subscribers
-## Spark Introduction task.
+Pet Project with Spark and Python/Scala
+
+## Spark Introduction task
 1. Create a generator Parquet files with twitter data for this Task. 
    Each Parquet file contains one of the tables below. 
 2. You need to read Parquet files and solve the following task: "A user posts a provocative message on Twitter. 
@@ -75,5 +77,6 @@ Task solution should contain:
 Project requires [sbt](https://www.scala-sbt.org/1.x/docs/Setup.html) and [pip](https://pypi.org/project/pip/) 
 installations.
 1. `git clone git@github.com:Samarkina/twitter-subscribers.git`
-2. `sudo pip install names`
-3. `sbt run`
+2. `pip install names`
+3. `pip install essential_generators`
+4. `sbt run`
