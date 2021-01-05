@@ -1,10 +1,11 @@
 import names
-from common import save_file, convert_list_to_df
+from scripts.common import save_file, convert_list_to_df
 from pyspark.sql import SparkSession, Row
 from pyspark.sql.types import StructType, IntegerType, StructField, StringType
 from datetime import datetime
 from essential_generators import DocumentGenerator
 import random
+
 
 class FilesGenerator():
     """Creating 4 Parquet files (each for table) for Twitter Task, which described in the README.md file"""
@@ -35,7 +36,10 @@ class FilesGenerator():
 
     def generate(self):
         print("Creating 4 files for 4 tables...")
-        spark = SparkSession.builder.appName('FileGenerator').getOrCreate()
+        spark: SparkSession = SparkSession.builder \
+            .master("local[2]") \
+            .appName('FileGenerator') \
+            .getOrCreate()
 
         message_data: tuple = self.message_generator()
         retweet_data: tuple = self.retweet_generator(message_data[0])
