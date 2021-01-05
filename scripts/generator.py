@@ -1,22 +1,17 @@
 import names
-from pyspark.rdd import RDD
-
-from common import save_file
+from common import save_file, convert_list_to_df
 from pyspark.sql import SparkSession, Row
 from pyspark.sql.types import StructType, IntegerType, StructField, StringType
-from pyspark.sql.dataframe import DataFrame
 from datetime import datetime
 from essential_generators import DocumentGenerator
 import random
-from pyspark.sql.functions import col
-from pyspark.context import SparkContext
 
 class FilesGenerator():
     """Creating 4 Parquet files (each for table) for Twitter Task, which described in the README.md file"""
 
-    USER_COUNT: int = 15
-    MESSAGE_COUNT: int = 30
-    RETWEET_COUNT: int = 12
+    USER_COUNT: int = 1000
+    MESSAGE_COUNT: int = 2000
+    RETWEET_COUNT: int = 3000
 
     # datetime object containing current date and time
     now: datetime = datetime.now()
@@ -36,48 +31,48 @@ class FilesGenerator():
         self.path = path
 
     def generate(self):
-        print("I will generate 4 files for 4 tables")
+        print("Creating 4 files for 4 tables...")
         spark = SparkSession.builder.appName('FileGenerator').getOrCreate()
 
         message_data: tuple = self.message_generator(spark)
-        data: list = [self.user_dir_generator(spark),
-                      self.message_dir_generator(spark),
-                      message_data,
-                      self.retweet_generator(spark, message_data[0])]
+        data: list = [
+            convert_list_to_df(spark, *self.message_dir_generator(spark)),
+            convert_list_to_df(spark, *self.user_dir_generator(spark)),
+            convert_list_to_df(spark, *message_data),
+            convert_list_to_df(spark, *self.retweet_generator(spark, message_data[0]))
+            ]
+        save_file(data, self.path)
 
-        save_file(data, self.path) # todo - сохранение файла пока выключено
-
-    def user_dir_generator(self, spark: SparkSession) -> (DataFrame, str):
+    def user_dir_generator(self, spark: SparkSession) -> (list, StructType, str):
         """Method generating 1 file for User Dir table
 
         :param spark: SparkSession
-        :return: user_dir table content and table name
+        :return: user_dir table content, table schema and table name
         """
-        print("I will generate 1 file for User Dir table")
+        print("Generating 1 file for User Dir table...")
 
-        schema = StructType([
+        schema: StructType = StructType([
             StructField('USER_ID', IntegerType(), True),
             StructField('FIRST_NAME', StringType(), True),
             StructField('LAST_NAME', StringType(), True)
         ])
 
-        table: DataFrame = spark.createDataFrame([], schema)
-        for i in range(self.user_count):
+        table: list = []
+        for user_id in range(self.user_count):
             name: str = names.get_first_name()
             lastname: str = names.get_last_name()
-            table: DataFrame = table.union(spark.createDataFrame(
-                [{'USER_ID': i, 'FIRST_NAME': name, 'LAST_NAME': lastname}])
-            )
+            table_row = (user_id, name, lastname)
+            table.append(table_row)
 
-        return table, "user_dir"
+        return table, schema, "user_dir"
 
-    def message_dir_generator(self, spark: SparkSession) -> (DataFrame, str):
+    def message_dir_generator(self, spark: SparkSession) -> (list, StructType, str):
         """Method generating 1 file for Message Dir table
 
         :param spark: SparkSession
-        :return: message_dir table content and table name
+        :return: message_dir table content, table schema and table name
         """
-        print("I will generate 1 file for Message Dir table")
+        print("Generating 1 file for Message Dir table...")
 
         schema = StructType([
             StructField('MESSAGE_ID', IntegerType(), True),
@@ -85,45 +80,43 @@ class FilesGenerator():
         ])
 
         gen: DocumentGenerator = DocumentGenerator()
-        table: DataFrame = spark.createDataFrame([], schema)
-        for i in range(self.message_count):
+        table: list = []
+        for message_id in range(self.message_count):
             text: str = gen.word()
-            table: DataFrame = table.union(spark.createDataFrame(
-                [{'MESSAGE_ID': i, 'TEXT': text}])
-            )
+            table_row: tuple = (message_id, text)
+            table.append(table_row)
 
-        return table, "message_dir"
+        return table, schema, "message_dir"
 
-    def message_generator(self, spark: SparkSession) -> (DataFrame, str):
+    def message_generator(self, spark: SparkSession) -> (list, StructType, str):
         """Method generating 1 file for Message table
 
         :param spark: SparkSession
-        :return: message table content and table name
+        :return: message table content, table schema and table name
         """
-        print("I will generate 1 file for Message table")
+        print("Generating 1 file for Message table...")
 
         schema = StructType([
             StructField('USER_ID', IntegerType(), True),
             StructField('MESSAGE_ID', IntegerType(), True)
         ])
 
-        table: DataFrame = spark.createDataFrame([], schema)
-        for j in range(self.message_count):
-            i: int = int(random.uniform(0, self.user_count))
-            sc: SparkContext = spark.sparkContext
-            new_row_df: DataFrame = sc.parallelize([Row(USER_ID=i, MESSAGE_ID=j)]).toDF().select("USER_ID", "MESSAGE_ID")
+        table: list = []
+        for message_id in range(self.message_count):
+            user_id: int = int(random.uniform(0, self.user_count))
+            table_row: tuple = (user_id, message_id)
+            table.append(table_row)
 
-            table: DataFrame = table.union(new_row_df)
+        return table, schema, "message"
 
-        return table, "message"
-
-    def retweet_generator(self, spark: SparkSession, message_data: DataFrame) -> (DataFrame, str):
+    def retweet_generator(self, spark: SparkSession, message_data: list) -> (list, StructType, str):
         """Method generating 1 file for Retweet table
 
         :param spark: SparkSession
-        :return: retweet table content and table name
+        :param message_data: Messages from the table with schema (USER_ID, MESSAGE_ID)
+        :return: retweet table content, table schema and table name
         """
-        print("I will generate 1 file for Retweet table")
+        print("Generating 1 file for Retweet table...")
 
         schema = StructType([
             StructField('USER_ID', IntegerType(), True),
@@ -131,25 +124,20 @@ class FilesGenerator():
             StructField('MESSAGE_ID', IntegerType(), True)
         ])
 
-        table: DataFrame = spark.createDataFrame([], schema)
-        for r in range(self.retweet_count):
+        table: list = []
+        for retweet_id in range(self.retweet_count):
             num_message_row: int = int(random.uniform(0, self.message_count))
-            message_row: Row = message_data.collect()[num_message_row]
+            message_row: Row = message_data[num_message_row]
 
-            user_id: int = message_row["USER_ID"]
-            message_id: int = message_row["MESSAGE_ID"]
+            user_id: int = message_row[0]
+            message_id: int = message_row[1]
 
             # find subscriber_id
             subscriber_id: int = int(random.uniform(0, self.user_count))
             while subscriber_id == user_id:
                 subscriber_id: int = int(random.uniform(0, self.user_count))
 
-            sc: SparkContext = spark.sparkContext
-            new_row_df: DataFrame = sc.parallelize([Row(
-                USER_ID=user_id,
-                SUBSCRIBER_ID=subscriber_id,
-                MESSAGE_ID=message_id)]).toDF().select("USER_ID", "SUBSCRIBER_ID", "MESSAGE_ID")
+            table_row: tuple = (user_id, subscriber_id, message_id)
+            table.append(table_row)
 
-            table: DataFrame = table.union(new_row_df)
-
-        return (table, "retweet")
+        return table, schema, "retweet"
