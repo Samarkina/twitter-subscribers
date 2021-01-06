@@ -1,8 +1,7 @@
 from scripts.common import save_file, convert_list_to_df, names_generator, get_random_string
-from pyspark.sql import SparkSession, Row
+from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, IntegerType, StructField, StringType
 from datetime import datetime
-from essential_generators import DocumentGenerator
 import random
 
 
@@ -51,7 +50,7 @@ class FilesGenerator():
             ]
         save_file(data, self.path)
 
-    def user_dir_generator(self) -> (list, StructType, str):
+    def user_dir_generator(self) -> (set, StructType, str):
         """Method generating 1 file for User Dir table
 
         :return: user_dir table content, table schema and table name
@@ -64,15 +63,15 @@ class FilesGenerator():
             StructField('LAST_NAME', StringType(), True)
         ])
 
-        table: list = []
+        table: set = set()
         for user_id in range(self.user_count):
             name, lastname = names_generator()
             table_row = (user_id, name, lastname)
-            table.append(table_row)
+            table.add(table_row)
 
         return table, schema, "user_dir"
 
-    def message_dir_generator(self) -> (list, StructType, str):
+    def message_dir_generator(self) -> (set, StructType, str):
         """Method generating 1 file for Message Dir table
 
         :return: message_dir table content, table schema and table name
@@ -84,16 +83,15 @@ class FilesGenerator():
             StructField('TEXT', StringType(), True)
         ])
 
-        gen: DocumentGenerator = DocumentGenerator()
-        table: list = []
+        table: set = set()
         for message_id in range(self.message_count):
             text: str = get_random_string(random.randint(3, 25))
             table_row: tuple = (message_id, text)
-            table.append(table_row)
+            table.add(table_row)
 
         return table, schema, "message_dir"
 
-    def message_generator(self) -> (list, StructType, str):
+    def message_generator(self) -> (set, StructType, str):
         """Method generating 1 file for Message table
 
         :return: message table content, table schema and table name
@@ -105,15 +103,15 @@ class FilesGenerator():
             StructField('MESSAGE_ID', IntegerType(), True)
         ])
 
-        table: list = []
+        table: set = set()
         for message_id in range(self.message_count):
             user_id: int = int(random.uniform(0, self.user_count))
             table_row: tuple = (user_id, message_id)
-            table.append(table_row)
+            table.add(table_row)
 
         return table, schema, "message"
 
-    def retweet_generator(self, message_data: list) -> (list, StructType, str):
+    def retweet_generator(self, message_data: set) -> (set, StructType, str):
         """Method generating 1 file for Retweet table
 
         :param message_data: Messages from the table with schema (USER_ID, MESSAGE_ID)
@@ -126,11 +124,12 @@ class FilesGenerator():
             StructField('SUBSCRIBER_ID', IntegerType(), True),
             StructField('MESSAGE_ID', IntegerType(), True)
         ])
-
-        table: list = []
-        for retweet_id in range(self.retweet_count):
-            num_message_row: int = int(random.uniform(0, self.message_count))
-            message_row: Row = message_data[num_message_row]
+        message_data_list: list = list(message_data)
+        table: set = set()
+        retweet_id: int = 0
+        while retweet_id <= self.retweet_count:
+            message_row_id: int = int(random.uniform(0, self.message_count))
+            message_row: tuple = message_data_list[message_row_id]
 
             user_id: int = message_row[0]
             message_id: int = message_row[1]
@@ -141,12 +140,12 @@ class FilesGenerator():
                 subscriber_id: int = int(random.uniform(0, self.user_count))
 
             table_row: tuple = (user_id, subscriber_id, message_id)
-            table.append(table_row)
+            table.add(table_row)
+            retweet_id += 1
 
-        table: list = list(dict.fromkeys(table))
         return table, schema, "retweet"
 
-    def retweet_generator_wave_2(self, retweet_data: list) -> (list, StructType, str):
+    def retweet_generator_wave_2(self, retweet_data: set) -> (set, StructType, str):
         """Method generating 1 file for Retweet table Wave 2
         "Later, every subscriber's subscriber does retweet too."
 
@@ -161,10 +160,12 @@ class FilesGenerator():
             StructField('MESSAGE_ID', IntegerType(), True)
         ])
 
-        table: list = []
-        for retweet_id in range(self.retweet_count_wave_2):
-            num_retweet_row: int = int(random.uniform(0, self.retweet_count))
-            retweet_row: Row = retweet_data[num_retweet_row]
+        retweet_data_list: list = list(retweet_data)
+        table: set = set()
+        retweet_id: int = 0
+        while retweet_id <= self.retweet_count_wave_2:
+            retweet_row_id: int = int(random.uniform(0, self.retweet_count))
+            retweet_row: tuple = retweet_data_list[retweet_row_id]
 
             user_id: int = retweet_row[0]
             old_subscriber_id: int = retweet_row[1]
@@ -177,7 +178,7 @@ class FilesGenerator():
                 new_subscriber_id: int = int(random.uniform(0, self.user_count))
 
             table_row: tuple = (user_id, new_subscriber_id, message_id)
-            table.append(table_row)
+            table.add(table_row)
+            retweet_id += 1
 
-        table: list = list(dict.fromkeys(table))
         return table, schema, "retweet_second_wave"

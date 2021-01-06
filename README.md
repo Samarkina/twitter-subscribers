@@ -77,6 +77,4 @@ Task solution should contain:
 Project requires [sbt](https://www.scala-sbt.org/1.x/docs/Setup.html) and [pip](https://pypi.org/project/pip/) 
 installations.
 1. `git clone git@github.com:Samarkina/twitter-subscribers.git`
-2. `pip install names`
-3. `pip install essential_generators`
-4. `sbt run`
+2. `sbt run`

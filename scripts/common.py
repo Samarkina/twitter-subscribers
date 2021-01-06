@@ -21,7 +21,7 @@ def save_file(data: list, path: str):
         print("Data was saved to parquet file: {}".format(file_path))
 
 
-def convert_list_to_df(spark: SparkSession, table: list, schema: StructType, table_name: str) -> (DataFrame, str):
+def convert_list_to_df(spark: SparkSession, table: set, schema: StructType, table_name: str) -> (DataFrame, str):
     """Converting tuple of table (list type), schema, table_name to tuple table (DataFrame type), table_name
 
     :param spark: SparkSession
@@ -30,12 +30,18 @@ def convert_list_to_df(spark: SparkSession, table: list, schema: StructType, tab
     :param table_name: str - Table name
     :return: Table in format DataFrame with table name (str type)
     """
+    table: list = convert_set_to_list(table)
     print("Converting content of the \"{}\" table from List to DataFrame format...".format(table_name))
     sc: SparkContext = spark.sparkContext
     rdd = sc.parallelize(table)
     df: DataFrame = sqlContext.createDataFrame(rdd, schema)
 
     return df, table_name
+
+
+def convert_set_to_list(table: set) -> list:
+    table: list = list(table)
+    return table
 
 
 def names_generator() -> (str, str):
