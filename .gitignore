@@ -3,4 +3,4 @@ data
 *.class
 *.log
 .DS_Store
-scripts/__pycache__/
+twitter-subscribers/__pycache__/
