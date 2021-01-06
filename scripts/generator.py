@@ -1,5 +1,4 @@
-import names
-from scripts.common import save_file, convert_list_to_df
+from scripts.common import save_file, convert_list_to_df, names_generator, get_random_string
 from pyspark.sql import SparkSession, Row
 from pyspark.sql.types import StructType, IntegerType, StructField, StringType
 from datetime import datetime
@@ -10,10 +9,10 @@ import random
 class FilesGenerator():
     """Creating 4 Parquet files (each for table) for Twitter Task, which described in the README.md file"""
 
-    USER_COUNT: int = 1000
-    MESSAGE_COUNT: int = 2000
-    RETWEET_COUNT: int = 3000
-    RETWEET_COUNT_WAVE_2: int = 2500
+    USER_COUNT: int = 1000000
+    MESSAGE_COUNT: int = 2000000
+    RETWEET_COUNT: int = 1000000
+    RETWEET_COUNT_WAVE_2: int = 500000
 
     # datetime object containing current date and time
     now: datetime = datetime.now()
@@ -67,8 +66,7 @@ class FilesGenerator():
 
         table: list = []
         for user_id in range(self.user_count):
-            name: str = names.get_first_name()
-            lastname: str = names.get_last_name()
+            name, lastname = names_generator()
             table_row = (user_id, name, lastname)
             table.append(table_row)
 
@@ -89,7 +87,7 @@ class FilesGenerator():
         gen: DocumentGenerator = DocumentGenerator()
         table: list = []
         for message_id in range(self.message_count):
-            text: str = gen.word()
+            text: str = get_random_string(random.randint(3, 25))
             table_row: tuple = (message_id, text)
             table.append(table_row)
 
@@ -145,6 +143,7 @@ class FilesGenerator():
             table_row: tuple = (user_id, subscriber_id, message_id)
             table.append(table_row)
 
+        table: list = list(dict.fromkeys(table))
         return table, schema, "retweet"
 
     def retweet_generator_wave_2(self, retweet_data: list) -> (list, StructType, str):
@@ -174,11 +173,11 @@ class FilesGenerator():
             # find subscriber_id
             new_subscriber_id: int = int(random.uniform(0, self.user_count))
             while new_subscriber_id == user_id or \
-                    new_subscriber_id == old_subscriber_id or \
-                    (user_id, new_subscriber_id, message_id) in retweet_data:
+                    new_subscriber_id == old_subscriber_id:
                 new_subscriber_id: int = int(random.uniform(0, self.user_count))
 
             table_row: tuple = (user_id, new_subscriber_id, message_id)
             table.append(table_row)
 
+        table: list = list(dict.fromkeys(table))
         return table, schema, "retweet_second_wave"
