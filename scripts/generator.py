@@ -18,7 +18,7 @@ class FilesGenerator():
     curr_date: str = now.strftime("%Y-%m-%d")
     curr_time: str = now.strftime("%H-%M-%S")
 
-    path = ".././data/" + curr_date + "/received=" + curr_time + "/"
+    path = ".././retweets-analytics/src/main/resources/" + curr_date + "/received=" + curr_time + "/"
 
     def __init__(self,
                  user_count: int = USER_COUNT,

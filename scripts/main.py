@@ -1,4 +1,4 @@
-from generator import FilesGenerator
+from scripts.generator import FilesGenerator
 
 
 if __name__ == '__main__':
