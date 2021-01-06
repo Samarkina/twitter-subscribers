@@ -40,6 +40,11 @@ def convert_list_to_df(spark: SparkSession, table: set, schema: StructType, tabl
 
 
 def convert_set_to_list(table: set) -> list:
+    """Converting set to list
+
+    :param table: set - Content of the table in Set format
+    :return: Content of the table in list format
+    """
     table: list = list(table)
     return table
 

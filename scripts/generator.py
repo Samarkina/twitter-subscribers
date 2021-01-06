@@ -33,7 +33,11 @@ class FilesGenerator():
         self.path = path
 
     def generate(self):
-        print("Creating 4 files for 4 tables...")
+        """Generating content for user_dir, message_dir, message, retweet, retweet_second_wave tables.
+        And executing function with saving the tables to Parquet file.
+        :return:
+        """
+        print("Creating Parquet files for tables...")
         spark: SparkSession = SparkSession.builder \
             .master("local[2]") \
             .appName('FileGenerator') \
