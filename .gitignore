@@ -1,6 +1,25 @@
 .idea
 data
-*.class
-*.log
 .DS_Store
 twitter-subscribers/__pycache__/
+
+*.class
+*.log
+
+# sbt specific
+retweets-analytics/.cache/
+retweets-analytics/.history/
+retweets-analytics/.lib/
+retweets-analytics/dist/*
+retweets-analytics/.bsp/
+retweets-analytics/target/
+retweets-analytics/lib_managed/
+retweets-analytics/src_managed/
+retweets-analytics/project/boot/
+retweets-analytics/project/plugins/project/
+retweets-analytics/project/target/
+
+# Scala-IDE specific
+retweets-analytics/.scala_dependencies
+retweets-analytics/.worksheet
+retweets-analytics/.idea
