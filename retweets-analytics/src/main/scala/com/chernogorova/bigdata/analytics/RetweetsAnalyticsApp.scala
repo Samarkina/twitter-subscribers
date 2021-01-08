@@ -1,4 +1,5 @@
 package com.chernogorova.bigdata.analytics
+import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 /**
@@ -11,13 +12,12 @@ object RetweetsAnalyticsApp {
       .builder()
       .appName("RetweetsAnalyticsApp")
       .config("spark.master", "local[2]")
-      .config("spark.driver.bindAddress", "127.0.0.1")
       .getOrCreate()
 
     spark.sparkContext.setLogLevel("WARN")
 
-//    val path = "src/main/resources/2021-01-06/received=20-55-34/"
-    val path = "src/main/resources/2021-01-08/received=03-06-00/"
+    val path = "src/main/resources/2021-01-06/received=20-55-34/"
+//    val path = "src/main/resources/2021-01-08/received=16-44-36/"
 
     val messageTablePath: String = path + "message/"
     val messageTableDF: DataFrame = ReadData.readParquetFile(spark, messageTablePath)
@@ -28,18 +28,17 @@ object RetweetsAnalyticsApp {
     val retweetTablePath: String = path + "retweet/"
     val retweetTableDF: DataFrame = ReadData.readParquetFile(spark, retweetTablePath)
 
-    retweetTableDF.show()
-
     val retweet2WaveTablePath: String = path + "retweet_second_wave/"
     val retweet2WaveTableDF: DataFrame = ReadData.readParquetFile(spark, retweet2WaveTablePath)
 
     val userDirTablePath: String = path + "user_dir/"
     val userDirTableDF: DataFrame = ReadData.readParquetFile(spark, userDirTablePath)
 
-    val target: DataFrame = Analytics.createTargetTable(spark, userDirTableDF, messageDirTableDF, retweetTableDF)
+    val firstWave: DataFrame = Analytics.createTargetTable(spark, userDirTableDF, messageDirTableDF, retweetTableDF)
+    firstWave.show(false)
 
-    target.show()
-
+    val secondWave: DataFrame = Analytics.createTargetTable(spark, userDirTableDF, messageDirTableDF, retweet2WaveTableDF)
+    secondWave.show(false)
 
     spark.stop()
   }

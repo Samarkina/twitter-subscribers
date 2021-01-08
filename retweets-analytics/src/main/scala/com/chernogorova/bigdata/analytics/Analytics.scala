@@ -3,8 +3,16 @@ package com.chernogorova.bigdata.analytics
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
+/**
+ * Compute target table with the top ten users by a number of retweets.
+ */
 object Analytics {
-
+  /**
+   * Calculating the table with column "count" contains number of the retweets
+   * @param spark: SparkSession
+   * @param retweet: DataFrame with retweet table with USER_ID, SUBSCRIBER_ID, MESSAGE_ID columns
+   * @return
+   */
   def retweetCounting(spark: SparkSession,
                       retweet: DataFrame): DataFrame = {
     import spark.implicits._
@@ -14,11 +22,19 @@ object Analytics {
       .groupBy("USER_ID", "MESSAGE_ID")
       .count()
       .sort($"count".desc)
-    count.show()
 
     count
   }
 
+  /**
+   * Creating the target table with top 10 users by a number of the retweets.
+   * Target table contains USER_ID, FIRST_NAME, LAST_NAME, MESSAGE_ID, TEXT, NUMBER_RETWEETS columns
+   * @param spark: SparkSession
+   * @param user_dir: Table with USER_ID, FIRST_NAME, LAST_NAME columns
+   * @param message_dir: Table with MESSAGE_ID, TEXT columns
+   * @param retweet: Table with USER_ID, SUBSCRIBER_ID, MESSAGE_ID columns
+   * @return
+   */
   def createTargetTable(spark: SparkSession,
                         user_dir: DataFrame,
                         message_dir: DataFrame,
@@ -41,12 +57,10 @@ object Analytics {
         $"ud.LAST_NAME",
         $"md.MESSAGE_ID",
         $"md.TEXT",
-        $"rc.count")
-
+        $"rc.count".as("NUMBER_RETWEETS"))
+      .orderBy($"rc.count".desc)
+      .limit(10)
 
     target
-
-
   }
-
 }

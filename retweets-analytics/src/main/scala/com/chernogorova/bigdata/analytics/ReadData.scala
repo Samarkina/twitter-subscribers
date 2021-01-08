@@ -14,11 +14,8 @@ object ReadData {
    * @return DataFrame with content of the Parquet file
    */
   def readParquetFile(spark: SparkSession, filePath: String): DataFrame = {
-    import spark.implicits._
-
     val parquetFileDF = spark.read.parquet(filePath)
 
     parquetFileDF
   }
-
 }

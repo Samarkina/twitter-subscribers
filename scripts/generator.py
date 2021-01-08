@@ -9,9 +9,9 @@ class FilesGenerator():
     """Creating 4 Parquet files (each for table) for Twitter Task, which described in the README.md file"""
 
     USER_COUNT: int = 20
-    MESSAGE_COUNT: int = 10
+    MESSAGE_COUNT: int = 30
     RETWEET_COUNT: int = 20
-    RETWEET_COUNT_WAVE_2: int = 10
+    RETWEET_COUNT_WAVE_2: int = 30
 
     # datetime object containing current date and time
     now: datetime = datetime.now()
@@ -130,8 +130,7 @@ class FilesGenerator():
         ])
         message_data_list: list = list(message_data)
         table: set = set()
-        retweet_id: int = 0
-        while retweet_id <= self.retweet_count:
+        while len(table) < self.retweet_count:
             message_row_id: int = int(random.uniform(0, self.message_count))
             message_row: tuple = message_data_list[message_row_id]
 
@@ -145,7 +144,6 @@ class FilesGenerator():
 
             table_row: tuple = (user_id, subscriber_id, message_id)
             table.add(table_row)
-            retweet_id += 1
 
         return table, schema, "retweet"
 
@@ -166,8 +164,7 @@ class FilesGenerator():
 
         retweet_data_list: list = list(retweet_data)
         table: set = set()
-        retweet_id: int = 0
-        while retweet_id <= self.retweet_count_wave_2:
+        while len(table) < self.retweet_count_wave_2:
             retweet_row_id: int = int(random.uniform(0, self.retweet_count))
             retweet_row: tuple = retweet_data_list[retweet_row_id]
 
@@ -183,6 +180,5 @@ class FilesGenerator():
 
             table_row: tuple = (user_id, new_subscriber_id, message_id)
             table.add(table_row)
-            retweet_id += 1
 
         return table, schema, "retweet_second_wave"
