@@ -11,27 +11,29 @@ class AnalyticsSpec extends AnyWordSpec with Matchers with SparkContextSetup {
   val userDirTablePath: String = path + "user_dir/"
 
   "Calculating the number of the retweets" in withSparkContext { spark =>
-    val retweet: DataFrame = ReadData.readParquetFile(spark, retweetTablePath)
+    val retweet: DataFrame = spark.read.parquet(retweetTablePath)
 
-    val answer: DataFrame = Analytics.retweetCounting(spark, retweet)
-    val correct_answer: DataFrame = createRetweetCountTable(spark)
-    answer.collect() should contain theSameElementsAs (correct_answer.collect())
+    val actual: DataFrame = Analytics.countRetweets(spark, retweet)
+    val expected: DataFrame = createExpectedRetweetCountTable(spark)
+
+    actual.collect() should contain theSameElementsAs (expected.collect())
 
   }
 
   "Creating the target table with top 10 user by a number of the retweets" in withSparkContext {spark =>
-    val retweet: DataFrame = ReadData.readParquetFile(spark, retweetTablePath)
-    val messageDir: DataFrame = ReadData.readParquetFile(spark, messageDirTablePath)
-    val userDir: DataFrame = ReadData.readParquetFile(spark, userDirTablePath)
+    val retweet: DataFrame = spark.read.parquet(retweetTablePath)
+    val messageDir: DataFrame = spark.read.parquet(messageDirTablePath)
+    val userDir: DataFrame = spark.read.parquet(userDirTablePath)
 
-    val answer: DataFrame = Analytics.createTargetTable(spark, userDir, messageDir, retweet)
-    val correct_answer: DataFrame = createTargetTable(spark)
-    answer.collect() should contain theSameElementsAs (correct_answer.collect())
+    val actual: DataFrame = Analytics.createTargetTable(spark, userDir, messageDir, retweet)
+    val expected: DataFrame = createExpectedTargetTable(spark)
+
+    actual.collect() should contain theSameElementsAs (expected.collect())
 
   }
 
 
-  def createRetweetCountTable(spark: SparkSession): DataFrame = {
+  def createExpectedRetweetCountTable(spark: SparkSession): DataFrame = {
     import spark.implicits._
 
     val df = Seq(
@@ -56,7 +58,7 @@ class AnalyticsSpec extends AnyWordSpec with Matchers with SparkContextSetup {
     df
   }
 
-  def createTargetTable(spark: SparkSession): DataFrame = {
+  def createExpectedTargetTable(spark: SparkSession): DataFrame = {
     import spark.implicits._
 
     val df = Seq(

@@ -33,198 +33,198 @@ class FilesGeneratorTest(unittest.TestCase):
 
     def test_user_dir_generator(self) -> NoReturn:
         table: list = [(0, "Tanya", "Smith")]
-        schema: StructType = StructType([
+        expected_schema: StructType = StructType([
             StructField('USER_ID', IntegerType(), True),
             StructField('FIRST_NAME', StringType(), True),
             StructField('LAST_NAME', StringType(), True)
         ])
 
-        correct_answer: tuple = (table, schema, "user_dir")
+        expected_answer: tuple = (table, expected_schema, "user_dir")
         answer: tuple = self.files_generator.user_dir_generator()
 
-        answer_user_id = type(answer[0][0][0])
-        answer_first_name = type(answer[0][0][1])
-        answer_last_name = type(answer[0][0][2])
+        actual_answer_user_id = type(list(answer[0])[0][0])
+        actual_answer_first_name = type(list(answer[0])[0][1])
+        actual_answer_last_name = type(list(answer[0])[0][2])
 
-        correct_answer_user_id = type(correct_answer[0][0][0])
-        correct_answer_first_name = type(correct_answer[0][0][1])
-        correct_answer_last_name = type(correct_answer[0][0][2])
+        expected_answer_user_id = type(expected_answer[0][0][0])
+        expected_answer_first_name = type(expected_answer[0][0][1])
+        expected_answer_last_name = type(expected_answer[0][0][2])
 
-        answer_schema = answer[1]
+        actual_answer_schema = answer[1]
 
-        answer_table_name = answer[2]
-        correct_answer_table_name = correct_answer[2]
+        actual_answer_table_name = answer[2]
+        expected_answer_table_name = expected_answer[2]
 
         # types of the table
-        assert answer_user_id == correct_answer_user_id, \
-            self.errorMessage.format(answer_user_id, correct_answer_user_id)
-        assert answer_first_name == correct_answer_first_name, \
-            self.errorMessage.format(answer_first_name, correct_answer_first_name)
-        assert answer_last_name == correct_answer_last_name, \
-            self.errorMessage.format(answer_last_name, correct_answer_last_name)
+        assert actual_answer_user_id == expected_answer_user_id, \
+            self.errorMessage.format(actual_answer_user_id, expected_answer_user_id)
+        assert actual_answer_first_name == expected_answer_first_name, \
+            self.errorMessage.format(actual_answer_first_name, expected_answer_first_name)
+        assert actual_answer_last_name == expected_answer_last_name, \
+            self.errorMessage.format(actual_answer_last_name, expected_answer_last_name)
 
         # schema of the table
-        assert answer_schema == schema, \
-            self.errorMessage.format(answer_schema, schema)
+        assert actual_answer_schema == expected_schema, \
+            self.errorMessage.format(actual_answer_schema, expected_schema)
 
         # name of the table
-        assert answer_table_name == correct_answer_table_name, \
-            self.errorMessage.format(answer_table_name, correct_answer_table_name)
+        assert actual_answer_table_name == expected_answer_table_name, \
+            self.errorMessage.format(actual_answer_table_name, expected_answer_table_name)
 
     def test_message_dir_generator(self) -> NoReturn:
         table: list = [(0, "Hello")]
-        schema = StructType([
+        expected_schema = StructType([
             StructField('MESSAGE_ID', IntegerType(), True),
             StructField('TEXT', StringType(), True)
         ])
 
-        correct_answer: tuple = (table, schema, "message_dir")
-        answer: tuple = self.files_generator.message_dir_generator()
+        expected_answer: tuple = (table, expected_schema, "message_dir")
+        actual_answer: tuple = self.files_generator.message_dir_generator()
 
-        answer_message_id = type(answer[0][0][0])
-        answer_text = type(answer[0][0][1])
+        actual_answer_message_id = type(list(actual_answer[0])[0][0])
+        actual_answer_text = type(list(actual_answer[0])[0][1])
 
-        correct_answer_message_id = type(correct_answer[0][0][0])
-        correct_answer_text = type(correct_answer[0][0][1])
+        expected_answer_message_id = type(expected_answer[0][0][0])
+        expected_answer_text = type(expected_answer[0][0][1])
 
-        answer_schema = answer[1]
+        actual_answer_schema = actual_answer[1]
 
-        answer_table_name = answer[2]
-        correct_answer_table_name = correct_answer[2]
+        actual_answer_table_name = actual_answer[2]
+        expected_answer_table_name = expected_answer[2]
 
         # types of the table
-        assert answer_message_id == correct_answer_message_id, \
-            self.errorMessage.format(answer_message_id, correct_answer_message_id)
-        assert answer_text == correct_answer_text, \
-            self.errorMessage.format(answer_text, correct_answer_text)
+        assert actual_answer_message_id == expected_answer_message_id, \
+            self.errorMessage.format(actual_answer_message_id, expected_answer_message_id)
+        assert actual_answer_text == expected_answer_text, \
+            self.errorMessage.format(actual_answer_text, expected_answer_text)
 
         # schema of the table
-        assert answer_schema == schema, \
-            self.errorMessage.format(answer_schema, schema)
+        assert actual_answer_schema == expected_schema, \
+            self.errorMessage.format(actual_answer_schema, expected_schema)
 
         # name of the table
-        assert answer_table_name == correct_answer_table_name, \
-            self.errorMessage.format(answer_table_name, correct_answer_table_name)
+        assert actual_answer_table_name == expected_answer_table_name, \
+            self.errorMessage.format(actual_answer_table_name, expected_answer_table_name)
 
     def test_message_generator(self) -> NoReturn:
         table: list = [(0, 2)]
-        schema = StructType([
+        expected_schema = StructType([
             StructField('USER_ID', IntegerType(), True),
             StructField('MESSAGE_ID', IntegerType(), True)
         ])
 
-        correct_answer: tuple = (table, schema, "message")
+        expected_answer: tuple = (table, expected_schema, "message")
         answer: tuple = self.files_generator.message_generator()
 
-        answer_user_id = type(answer[0][0][0])
-        answer_message_id = type(answer[0][0][1])
+        actual_answer_user_id = type(list(answer[0])[0][0])
+        actual_answer_message_id = type(list(answer[0])[0][1])
 
-        correct_answer_user_id = type(correct_answer[0][0][0])
-        correct_answer_message_id = type(correct_answer[0][0][1])
+        expected_answer_user_id = type(expected_answer[0][0][0])
+        expected_answer_message_id = type(expected_answer[0][0][1])
 
-        answer_schema = answer[1]
+        actual_answer_schema = answer[1]
 
-        answer_table_name = answer[2]
-        correct_answer_table_name = correct_answer[2]
+        actual_answer_table_name = answer[2]
+        expected_answer_table_name = expected_answer[2]
 
         # types of the table
-        assert answer_user_id == correct_answer_user_id, \
-            self.errorMessage.format(answer_user_id, correct_answer_user_id)
-        assert answer_message_id == correct_answer_message_id, \
-            self.errorMessage.format(answer_message_id, correct_answer_message_id)
+        assert actual_answer_user_id == expected_answer_user_id, \
+            self.errorMessage.format(actual_answer_user_id, expected_answer_user_id)
+        assert actual_answer_message_id == expected_answer_message_id, \
+            self.errorMessage.format(actual_answer_message_id, expected_answer_message_id)
 
         # schema of the table
-        assert answer_schema == schema, \
-            self.errorMessage.format(answer_schema, schema)
+        assert actual_answer_schema == expected_schema, \
+            self.errorMessage.format(actual_answer_schema, expected_schema)
 
         # name of the table
-        assert answer_table_name == correct_answer_table_name, \
-            self.errorMessage.format(answer_table_name, correct_answer_table_name)
+        assert actual_answer_table_name == expected_answer_table_name, \
+            self.errorMessage.format(actual_answer_table_name, expected_answer_table_name)
 
     def test_retweet_generator(self) -> NoReturn:
         table: list = [(0, 2, "Hello")]
-        schema = StructType([
+        expected_schema = StructType([
             StructField('USER_ID', IntegerType(), True),
             StructField('SUBSCRIBER_ID', IntegerType(), True),
             StructField('MESSAGE_ID', IntegerType(), True)
         ])
-        message_data: list = [(1, 0), (5, 1), (9, 2), (5, 3), (8, 4), (3, 5), (1, 6), (4, 7), (2, 8), (7, 9),
-                              (8, 10), (8, 11), (9, 12), (5, 13), (6, 14), (8, 15), (8, 16), (7, 17), (1, 18), (8, 19)]
+        message_data: set = {(1, 0), (5, 1), (9, 2), (5, 3), (8, 4), (3, 5), (1, 6), (4, 7), (2, 8), (7, 9),
+                              (8, 10), (8, 11), (9, 12), (5, 13), (6, 14), (8, 15), (8, 16), (7, 17), (1, 18), (8, 19)}
 
-        correct_answer: tuple = (table, schema, "retweet")
+        expected_answer: tuple = (table, expected_schema, "retweet")
         answer: tuple = self.files_generator.retweet_generator(message_data)
 
-        answer_user_id = type(answer[0][0][0])
-        answer_subscriber_id = type(answer[0][0][1])
-        answer_message_id = type(answer[0][0][1])
+        actual_answer_user_id = type(list(answer[0])[0][0])
+        actual_answer_subscriber_id = type(list(answer[0])[0][1])
+        actual_answer_message_id = type(list(answer[0])[0][1])
 
-        correct_answer_user_id = type(correct_answer[0][0][0])
-        correct_answer_subscriber_id = type(correct_answer[0][0][1])
-        correct_answer_message_id = type(correct_answer[0][0][1])
+        expected_answer_user_id = type(expected_answer[0][0][0])
+        expected_answer_subscriber_id = type(expected_answer[0][0][1])
+        expected_answer_message_id = type(expected_answer[0][0][1])
 
-        answer_schema = answer[1]
+        actual_answer_schema = answer[1]
 
-        answer_table_name = answer[2]
-        correct_answer_table_name = correct_answer[2]
+        actual_answer_table_name = answer[2]
+        expected_answer_table_name = expected_answer[2]
 
         # types of the table
-        assert answer_user_id == correct_answer_user_id, \
-            self.errorMessage.format(answer_user_id, correct_answer_user_id)
-        assert answer_subscriber_id == correct_answer_subscriber_id, \
-            self.errorMessage.format(answer_subscriber_id, correct_answer_subscriber_id)
-        assert answer_message_id == correct_answer_message_id, \
-            self.errorMessage.format(answer_message_id, correct_answer_message_id)
+        assert actual_answer_user_id == expected_answer_user_id, \
+            self.errorMessage.format(actual_answer_user_id, expected_answer_user_id)
+        assert actual_answer_subscriber_id == expected_answer_subscriber_id, \
+            self.errorMessage.format(actual_answer_subscriber_id, expected_answer_subscriber_id)
+        assert actual_answer_message_id == expected_answer_message_id, \
+            self.errorMessage.format(actual_answer_message_id, expected_answer_message_id)
 
         # schema of the table
-        assert answer_schema == schema, \
-            self.errorMessage.format(answer_schema, schema)
+        assert actual_answer_schema == expected_schema, \
+            self.errorMessage.format(actual_answer_schema, expected_schema)
 
         # name of the table
-        assert answer_table_name == correct_answer_table_name, \
-            self.errorMessage.format(answer_table_name, correct_answer_table_name)
+        assert actual_answer_table_name == expected_answer_table_name, \
+            self.errorMessage.format(actual_answer_table_name, expected_answer_table_name)
 
     def test_retweet_generator_wave_2(self) -> NoReturn:
         table: list = [(0, 2, "Hello")]
-        schema = StructType([
+        expected_schema = StructType([
             StructField('USER_ID', IntegerType(), True),
             StructField('SUBSCRIBER_ID', IntegerType(), True),
             StructField('MESSAGE_ID', IntegerType(), True)
         ])
-        retweet_data: list = [(1, 0, 2), (5, 1, 2), (9, 2, 6), (5, 3, 8), (8, 4, 2),
+        retweet_data: set = {(1, 0, 2), (5, 1, 2), (9, 2, 6), (5, 3, 8), (8, 4, 2),
                               (3, 5, 8), (1, 6, 2), (4, 7, 7), (2, 8, 6), (7, 9, 3),
                               (8, 3, 10), (8, 2, 11), (9, 7, 12), (5, 6, 13), (6, 4, 14),
                               (8, 3, 15), (8, 2, 16), (7, 1, 17), (1, 5, 18), (8, 7, 19),
                               (8, 2, 10), (8, 1, 11), (9, 7, 12), (5, 3, 13), (6, 2, 14),
-                              (8, 0, 15), (8, 0, 16), (7, 3, 17), (1, 1, 18), (8, 2, 19)]
+                              (8, 0, 15), (8, 0, 16), (7, 3, 17), (1, 1, 18), (8, 2, 19)}
 
-        correct_answer: tuple = (table, schema, "retweet")
+        expected_answer: tuple = (table, expected_schema, "retweet")
         answer: tuple = self.files_generator.retweet_generator(retweet_data)
 
-        answer_user_id = type(answer[0][0][0])
-        answer_subscriber_id = type(answer[0][0][1])
-        answer_message_id = type(answer[0][0][1])
+        actual_answer_user_id = type(list(answer[0])[0][0])
+        actual_answer_subscriber_id = type(list(answer[0])[0][1])
+        actual_answer_message_id = type(list(answer[0])[0][1])
 
-        correct_answer_user_id = type(correct_answer[0][0][0])
-        correct_answer_subscriber_id = type(correct_answer[0][0][1])
-        correct_answer_message_id = type(correct_answer[0][0][1])
+        expected_answer_user_id = type(expected_answer[0][0][0])
+        expected_answer_subscriber_id = type(expected_answer[0][0][1])
+        expected_answer_message_id = type(expected_answer[0][0][1])
 
-        answer_schema = answer[1]
+        actual_answer_schema = answer[1]
 
-        answer_table_name = answer[2]
-        correct_answer_table_name = correct_answer[2]
+        actual_answer_table_name = answer[2]
+        expected_answer_table_name = expected_answer[2]
 
         # types of the table
-        assert answer_user_id == correct_answer_user_id, \
-            self.errorMessage.format(answer_user_id, correct_answer_user_id)
-        assert answer_subscriber_id == correct_answer_subscriber_id, \
-            self.errorMessage.format(answer_subscriber_id, correct_answer_subscriber_id)
-        assert answer_message_id == correct_answer_message_id, \
-            self.errorMessage.format(answer_message_id, correct_answer_message_id)
+        assert actual_answer_user_id == expected_answer_user_id, \
+            self.errorMessage.format(actual_answer_user_id, expected_answer_user_id)
+        assert actual_answer_subscriber_id == expected_answer_subscriber_id, \
+            self.errorMessage.format(actual_answer_subscriber_id, expected_answer_subscriber_id)
+        assert actual_answer_message_id == expected_answer_message_id, \
+            self.errorMessage.format(actual_answer_message_id, expected_answer_message_id)
 
         # schema of the table
-        assert answer_schema == schema, \
-            self.errorMessage.format(answer_schema, schema)
+        assert actual_answer_schema == expected_schema, \
+            self.errorMessage.format(actual_answer_schema, expected_schema)
 
         # name of the table
-        assert answer_table_name == correct_answer_table_name, \
-            self.errorMessage.format(answer_table_name, correct_answer_table_name)
+        assert actual_answer_table_name == expected_answer_table_name, \
+            self.errorMessage.format(actual_answer_table_name, expected_answer_table_name)

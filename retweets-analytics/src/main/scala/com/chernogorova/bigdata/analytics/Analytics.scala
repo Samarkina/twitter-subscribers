@@ -13,7 +13,7 @@ object Analytics {
    * @param retweet: DataFrame with retweet table with USER_ID, SUBSCRIBER_ID, MESSAGE_ID columns
    * @return
    */
-  def retweetCounting(spark: SparkSession,
+  def countRetweets(spark: SparkSession,
                       retweet: DataFrame): DataFrame = {
     import spark.implicits._
 
@@ -28,12 +28,12 @@ object Analytics {
 
   /**
    * Creating the target table with top 10 users by a number of the retweets.
-   * Target table contains USER_ID, FIRST_NAME, LAST_NAME, MESSAGE_ID, TEXT, NUMBER_RETWEETS columns
+   *
    * @param spark: SparkSession
    * @param user_dir: Table with USER_ID, FIRST_NAME, LAST_NAME columns
    * @param message_dir: Table with MESSAGE_ID, TEXT columns
    * @param retweet: Table with USER_ID, SUBSCRIBER_ID, MESSAGE_ID columns
-   * @return
+   * @return Target table contains USER_ID, FIRST_NAME, LAST_NAME, MESSAGE_ID, TEXT, NUMBER_RETWEETS columns
    */
   def createTargetTable(spark: SparkSession,
                         user_dir: DataFrame,
@@ -41,7 +41,7 @@ object Analytics {
                         retweet: DataFrame): DataFrame = {
     import spark.implicits._
 
-    val retweetCount: DataFrame = retweetCounting(spark, retweet)
+    val retweetCount: DataFrame = countRetweets(spark, retweet)
 
     val target: DataFrame = retweetCount.as("rc")
       .join(

@@ -78,3 +78,14 @@ Project requires [sbt](https://www.scala-sbt.org/1.x/docs/Setup.html) and [pip](
 installations.
 1. `git clone git@github.com:Samarkina/twitter-subscribers.git`
 2. `sbt run`
+
+### Run project
+1. For running generator needs to run 
+   `/scripts/main.py`
+2. For running analytics needs to run 
+   `/retweets-analytics/src//src/main/scala/com/chernogorova/bigdata/analytics/RetweetsAnalyticsApp.scala`
+
+### Example
+Analytic App provides table following in the picture for data in 
+`/retweets-analytics/src/main/resources/2021-01-06/received=20-55-34/` folder:
+![tests](https://github.com/Samarkina/twitter-subscribers/blob/master/scala_tests.png?raw=true)
