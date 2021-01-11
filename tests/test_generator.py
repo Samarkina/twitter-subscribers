@@ -40,19 +40,19 @@ class FilesGeneratorTest(unittest.TestCase):
         ])
 
         expected_answer: tuple = (table, expected_schema, "user_dir")
-        answer: tuple = self.files_generator.user_dir_generator()
+        actual_answer: tuple = self.files_generator.user_dir_generator()
 
-        actual_answer_user_id = type(list(answer[0])[0][0])
-        actual_answer_first_name = type(list(answer[0])[0][1])
-        actual_answer_last_name = type(list(answer[0])[0][2])
+        actual_answer_user_id = type(list(actual_answer[0])[0][0])
+        actual_answer_first_name = type(list(actual_answer[0])[0][1])
+        actual_answer_last_name = type(list(actual_answer[0])[0][2])
 
         expected_answer_user_id = type(expected_answer[0][0][0])
         expected_answer_first_name = type(expected_answer[0][0][1])
         expected_answer_last_name = type(expected_answer[0][0][2])
 
-        actual_answer_schema = answer[1]
+        actual_answer_schema = actual_answer[1]
 
-        actual_answer_table_name = answer[2]
+        actual_answer_table_name = actual_answer[2]
         expected_answer_table_name = expected_answer[2]
 
         # types of the table
@@ -114,17 +114,17 @@ class FilesGeneratorTest(unittest.TestCase):
         ])
 
         expected_answer: tuple = (table, expected_schema, "message")
-        answer: tuple = self.files_generator.message_generator()
+        actual_answer: tuple = self.files_generator.message_generator()
 
-        actual_answer_user_id = type(list(answer[0])[0][0])
-        actual_answer_message_id = type(list(answer[0])[0][1])
+        actual_answer_user_id = type(list(actual_answer[0])[0][0])
+        actual_answer_message_id = type(list(actual_answer[0])[0][1])
 
         expected_answer_user_id = type(expected_answer[0][0][0])
         expected_answer_message_id = type(expected_answer[0][0][1])
 
-        actual_answer_schema = answer[1]
+        actual_answer_schema = actual_answer[1]
 
-        actual_answer_table_name = answer[2]
+        actual_answer_table_name = actual_answer[2]
         expected_answer_table_name = expected_answer[2]
 
         # types of the table
@@ -152,19 +152,19 @@ class FilesGeneratorTest(unittest.TestCase):
                               (8, 10), (8, 11), (9, 12), (5, 13), (6, 14), (8, 15), (8, 16), (7, 17), (1, 18), (8, 19)}
 
         expected_answer: tuple = (table, expected_schema, "retweet")
-        answer: tuple = self.files_generator.retweet_generator(message_data)
+        actual_answer: tuple = self.files_generator.retweet_generator(message_data)
 
-        actual_answer_user_id = type(list(answer[0])[0][0])
-        actual_answer_subscriber_id = type(list(answer[0])[0][1])
-        actual_answer_message_id = type(list(answer[0])[0][1])
+        actual_answer_user_id = type(list(actual_answer[0])[0][0])
+        actual_answer_subscriber_id = type(list(actual_answer[0])[0][1])
+        actual_answer_message_id = type(list(actual_answer[0])[0][1])
 
         expected_answer_user_id = type(expected_answer[0][0][0])
         expected_answer_subscriber_id = type(expected_answer[0][0][1])
         expected_answer_message_id = type(expected_answer[0][0][1])
 
-        actual_answer_schema = answer[1]
+        actual_answer_schema = actual_answer[1]
 
-        actual_answer_table_name = answer[2]
+        actual_answer_table_name = actual_answer[2]
         expected_answer_table_name = expected_answer[2]
 
         # types of the table
@@ -198,19 +198,19 @@ class FilesGeneratorTest(unittest.TestCase):
                               (8, 0, 15), (8, 0, 16), (7, 3, 17), (1, 1, 18), (8, 2, 19)}
 
         expected_answer: tuple = (table, expected_schema, "retweet")
-        answer: tuple = self.files_generator.retweet_generator(retweet_data)
+        actual_answer: tuple = self.files_generator.retweet_generator(retweet_data)
 
-        actual_answer_user_id = type(list(answer[0])[0][0])
-        actual_answer_subscriber_id = type(list(answer[0])[0][1])
-        actual_answer_message_id = type(list(answer[0])[0][1])
+        actual_answer_user_id = type(list(actual_answer[0])[0][0])
+        actual_answer_subscriber_id = type(list(actual_answer[0])[0][1])
+        actual_answer_message_id = type(list(actual_answer[0])[0][1])
 
         expected_answer_user_id = type(expected_answer[0][0][0])
         expected_answer_subscriber_id = type(expected_answer[0][0][1])
         expected_answer_message_id = type(expected_answer[0][0][1])
 
-        actual_answer_schema = answer[1]
+        actual_answer_schema = actual_answer[1]
 
-        actual_answer_table_name = answer[2]
+        actual_answer_table_name = actual_answer[2]
         expected_answer_table_name = expected_answer[2]
 
         # types of the table
