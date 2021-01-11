@@ -88,4 +88,6 @@ installations.
 ### Example
 Analytic App provides table following in the picture for data in 
 `/retweets-analytics/src/main/resources/2021-01-06/received=20-55-34/` folder:
-![tests](https://github.com/Samarkina/twitter-subscribers/blob/master/scala_tests.png?raw=true)
+![scala_tests](https://github.com/Samarkina/twitter-subscribers/blob/master/scala_tests.png?raw=true)
+![scala_tests](https://github.com/Samarkina/twitter-subscribers/screenshots/scala_tests.png)
+![scala_tests](screenshots/scala_tests.png)

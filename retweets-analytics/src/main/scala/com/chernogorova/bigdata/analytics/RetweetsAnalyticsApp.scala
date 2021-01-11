@@ -27,8 +27,8 @@ object RetweetsAnalyticsApp {
     val retweetTablePath: String = path + "retweet/"
     val retweetTableDF: DataFrame = spark.read.parquet(retweetTablePath)
 
-    val retweet2WaveTablePath: String = path + "retweet_second_wave/"
-    val retweet2WaveTableDF: DataFrame = spark.read.parquet(retweet2WaveTablePath)
+    val retweetSecondWaveTablePath: String = path + "retweet_second_wave/"
+    val retweetSecondWaveTableDF: DataFrame = spark.read.parquet(retweetSecondWaveTablePath)
 
     val userDirTablePath: String = path + "user_dir/"
     val userDirTableDF: DataFrame = spark.read.parquet(userDirTablePath)
@@ -36,7 +36,7 @@ object RetweetsAnalyticsApp {
     val firstWave: DataFrame = Analytics.createTargetTable(spark, userDirTableDF, messageDirTableDF, retweetTableDF)
     firstWave.show(false)
 
-    val secondWave: DataFrame = Analytics.createTargetTable(spark, userDirTableDF, messageDirTableDF, retweet2WaveTableDF)
+    val secondWave: DataFrame = Analytics.createTargetTable(spark, userDirTableDF, messageDirTableDF, retweetSecondWaveTableDF)
     secondWave.show(false)
 
     spark.stop()
