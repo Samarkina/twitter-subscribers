@@ -1,6 +1,11 @@
 # Twitter subscribers
 Pet Project with Spark and Python/Scala
 
+The Data Generator implemented in Python is located in the `scripts` folder.
+The Tests for it are contained in the `tests` folder.
+The Analytics part of the Application implemented in Scala is located in the `retweets-analytics/src/main` folder.
+The Tests for Analytics part is located in the `retweets-analytics/src/test` folder.
+
 ## Spark Introduction task
 1. Create a generator Parquet files with twitter data for this Task. 
    Each Parquet file contains one of the tables below. 
@@ -74,8 +79,7 @@ Task solution should contain:
 4. Generator for creating Parquet files.
 
 ### Installation
-Project requires [sbt](https://www.scala-sbt.org/1.x/docs/Setup.html) and [pip](https://pypi.org/project/pip/) 
-installations.
+Project requires [sbt](https://www.scala-sbt.org/1.x/docs/Setup.html) installation.
 1. `git clone git@github.com:Samarkina/twitter-subscribers.git`
 2. `sbt run`
 
@@ -83,11 +87,25 @@ installations.
 1. For running generator needs to run 
    `/scripts/main.py`
 2. For running analytics needs to run 
-   `/retweets-analytics/src//src/main/scala/com/chernogorova/bigdata/analytics/RetweetsAnalyticsApp.scala`
+   `/retweets-analytics/src/main/scala/com/chernogorova/bigdata/analytics/RetweetsAnalyticsApp.scala`
 
 ### Example
-Analytic App provides table following in the picture for data in 
-`/retweets-analytics/src/main/resources/2021-01-06/received=20-55-34/` folder:
-![scala_tests](https://github.com/Samarkina/twitter-subscribers/blob/master/scala_tests.png?raw=true)
-![scala_tests](https://github.com/Samarkina/twitter-subscribers/screenshots/scala_tests.png)
-![scala_tests](screenshots/scala_tests.png)
+input: 
+
+`/retweets-analytics/src/main/resources/2021-01-06/received=20-55-34/`
+
+output:
+
+First Wave:
+![first_wave](https://github.com/Samarkina/twitter-subscribers/blob/main/screenshots/first_wave.png?raw=true)
+
+Second Wave:
+![second_wave](https://github.com/Samarkina/twitter-subscribers/blob/main/screenshots/second_wave.png?raw=true)
+
+### Test running
+Python (Generator) Test:
+![python_tests](https://github.com/Samarkina/twitter-subscribers/blob/main/screenshots/python_tests.png?raw=true)
+
+Scala (Analytics) Test:
+![scala_tests](https://github.com/Samarkina/twitter-subscribers/blob/main/screenshots/scala_tests.png?raw=true)
+
