@@ -1,4 +1,4 @@
-from scripts.common import save_file, convert_list_to_df, names_generator, get_random_string
+from scripts.common import save_file, convert_list_to_df, names_generator, get_random_string, concat_tables
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, IntegerType, StructField, StringType
 from datetime import datetime
@@ -8,17 +8,22 @@ import random
 class FilesGenerator():
     """Creating 4 Parquet files (each for table) for Twitter Task, which described in the README.md file"""
 
-    USER_COUNT: int = 20
-    MESSAGE_COUNT: int = 30
-    RETWEET_COUNT: int = 20
-    RETWEET_COUNT_WAVE_2: int = 30
+    # USER_COUNT: int = 10
+    # MESSAGE_COUNT: int = 20
+    # RETWEET_COUNT: int = 5
+    # RETWEET_COUNT_WAVE_2: int = 2
+
+    USER_COUNT: int = 1000000
+    MESSAGE_COUNT: int = 2000000
+    RETWEET_COUNT: int = 1000000
+    RETWEET_COUNT_WAVE_2: int = 500000
 
     # datetime object containing current date and time
     now: datetime = datetime.now()
     curr_date: str = now.strftime("%Y-%m-%d")
     curr_time: str = now.strftime("%H-%M-%S")
 
-    path = ".././retweets-analytics/src/main/resources/" + curr_date + "/received=" + curr_time + "/"
+    path = ".././retweets-analytics/src/main/resources/received=" + curr_date + "/time=" + curr_time + "/"
 
     def __init__(self,
                  user_count: int = USER_COUNT,
@@ -45,12 +50,13 @@ class FilesGenerator():
 
         message_data: tuple = self.message_generator()
         retweet_data: tuple = self.retweet_generator(message_data[0])
+        retweet_data_wave_2: set = self.retweet_generator_wave_2(retweet_data[0])
+        all_retweet_data: tuple = concat_tables(retweet_data, retweet_data_wave_2)
         data: list = [
             convert_list_to_df(spark, *self.message_dir_generator()),
             convert_list_to_df(spark, *self.user_dir_generator()),
             convert_list_to_df(spark, *message_data),
-            convert_list_to_df(spark, *retweet_data),
-            convert_list_to_df(spark, *self.retweet_generator_wave_2(retweet_data[0])),
+            convert_list_to_df(spark, *all_retweet_data)
             ]
         save_file(data, self.path)
 
@@ -147,20 +153,14 @@ class FilesGenerator():
 
         return table, schema, "retweet"
 
-    def retweet_generator_wave_2(self, retweet_data: set) -> (set, StructType, str):
+    def retweet_generator_wave_2(self, retweet_data: set) -> set:
         """Method generating 1 file for Retweet table Wave 2
         "Later, every subscriber's subscriber does retweet too."
 
         :param retweet_data: Retweets data from the table with schema (USER_ID, SUBSCRIBER_ID, MESSAGE_ID)
-        :return: retweet table content for wave 2, table schema and table name
+        :return: retweet table content for wave 2
         """
         print("Generating 1 file for Retweet table for second wave...")
-
-        schema = StructType([
-            StructField('USER_ID', IntegerType(), True),
-            StructField('SUBSCRIBER_ID', IntegerType(), True),
-            StructField('MESSAGE_ID', IntegerType(), True)
-        ])
 
         retweet_data_list: list = list(retweet_data)
         table: set = set()
@@ -178,7 +178,7 @@ class FilesGenerator():
                     new_subscriber_id == old_subscriber_id:
                 new_subscriber_id: int = int(random.uniform(0, self.user_count))
 
-            table_row: tuple = (user_id, new_subscriber_id, message_id)
+            table_row: tuple = (old_subscriber_id, new_subscriber_id, message_id)
             table.add(table_row)
 
-        return table, schema, "retweet_second_wave"
+        return table

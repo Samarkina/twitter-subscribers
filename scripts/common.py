@@ -84,3 +84,14 @@ def get_random_string(length: int) -> str:
     word = ''.join((random.choice(letters) for i in range(length)))
 
     return word
+
+
+def concat_tables(tuple_table: tuple, second_table: set) -> tuple:
+    """Concatenate retweets tables with first and second waves
+
+    :param tuple_table: first retweet wave
+    :param second_tuple_table: second retweet wave
+    :return: all retweet data
+    """
+    table: set = tuple_table[0] | second_table
+    return table, tuple_table[1], tuple_table[2]
