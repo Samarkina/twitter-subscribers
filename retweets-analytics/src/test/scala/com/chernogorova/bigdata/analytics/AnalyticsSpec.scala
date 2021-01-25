@@ -8,6 +8,7 @@ class AnalyticsSpec extends AnyWordSpec with Matchers with SparkContextSetup {
   val path = "src/test/resources/2021-01-08/received=16-44-36/"
   val retweetTablePath: String = path + "retweet/"
   val messageDirTablePath: String = path + "message_dir/"
+  val messageTablePath: String = path + "message/"
   val userDirTablePath: String = path + "user_dir/"
 
   "Calculating the number of the retweets" in withSparkContext { spark =>
@@ -23,9 +24,10 @@ class AnalyticsSpec extends AnyWordSpec with Matchers with SparkContextSetup {
   "Creating the target table with top 10 user by a number of the retweets" in withSparkContext {spark =>
     val retweet: DataFrame = spark.read.parquet(retweetTablePath)
     val messageDir: DataFrame = spark.read.parquet(messageDirTablePath)
+    val message: DataFrame = spark.read.parquet(messageTablePath)
     val userDir: DataFrame = spark.read.parquet(userDirTablePath)
 
-    val actual: DataFrame = Analytics.createTargetTable(spark, userDir, messageDir, retweet)
+    val actual: DataFrame = Analytics.createTableForFirstWave(spark, userDir, message, messageDir, retweet)
     val expected: DataFrame = createExpectedTargetTable(spark)
 
     actual.collect() should contain theSameElementsAs (expected.collect())

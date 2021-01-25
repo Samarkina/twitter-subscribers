@@ -8,15 +8,15 @@ import random
 class FilesGenerator():
     """Creating 4 Parquet files (each for table) for Twitter Task, which described in the README.md file"""
 
-    # USER_COUNT: int = 10
-    # MESSAGE_COUNT: int = 20
-    # RETWEET_COUNT: int = 5
-    # RETWEET_COUNT_WAVE_2: int = 2
+    USER_COUNT: int = 20
+    MESSAGE_COUNT: int = 30
+    RETWEET_COUNT: int = 10
+    RETWEET_COUNT_WAVE_2: int = 5
 
-    USER_COUNT: int = 1000000
-    MESSAGE_COUNT: int = 2000000
-    RETWEET_COUNT: int = 1000000
-    RETWEET_COUNT_WAVE_2: int = 500000
+    # USER_COUNT: int = 1000000
+    # MESSAGE_COUNT: int = 2000000
+    # RETWEET_COUNT: int = 1000000
+    # RETWEET_COUNT_WAVE_2: int = 500000
 
     # datetime object containing current date and time
     now: datetime = datetime.now()
