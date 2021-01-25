@@ -16,10 +16,7 @@ object RetweetsAnalyticsApp {
 
     spark.sparkContext.setLogLevel("WARN")
 
-//    val path = "src/main/resources/2021-01-06/received=20-55-34/"
-//    val path = "src/main/resources/received=2021-01-24/time=00-38-10/" // big
-    val path = "src/main/resources/received=2021-01-24/time=00-40-58/" // super small
-//    val path = "src/main/resources/received=2021-01-25/time=01-27-51/" // small
+    val path = "src/main/resources/received=2021-01-24/time=00-38-10/"
 
     val messageTablePath: String = path + "message/"
     val messageTableDF: DataFrame = spark.read.parquet(messageTablePath)
@@ -33,11 +30,13 @@ object RetweetsAnalyticsApp {
     val userDirTablePath: String = path + "user_dir/"
     val userDirTableDF: DataFrame = spark.read.parquet(userDirTablePath)
 
-    val firstWave: DataFrame = Analytics.createTableForFirstWave(spark, userDirTableDF, messageTableDF, messageDirTableDF, retweetTableDF)
+    val allData: DataFrame = Analytics.createTableForAllWaves(spark, userDirTableDF, messageTableDF, messageDirTableDF, retweetTableDF)
+
+    val firstWave: DataFrame = Analytics.createTableForFirstWave(spark, allData, messageTableDF)
     firstWave.show(false)
 
-//    val secondWave: DataFrame = Analytics.createTargetTable(spark, userDirTableDF, messageDirTableDF, retweetSecondWaveTableDF)
-//    secondWave.show(false)
+    val secondWave: DataFrame = Analytics.createTableForSecondWave(spark, allData, userDirTableDF, messageTableDF)
+    secondWave.show(false)
 
     spark.stop()
   }
