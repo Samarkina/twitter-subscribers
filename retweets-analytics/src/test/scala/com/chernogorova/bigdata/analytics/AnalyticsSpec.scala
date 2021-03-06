@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class AnalyticsSpec extends AnyWordSpec with Matchers with SparkContextSetup {
-  val path = "src/main/resources/received=2021-01-24/time=00-40-58/"
+  val path = "src/test/resources/received=2021-01-24/time=00-40-58/"
   val retweetTablePath: String = path + "retweet/"
   val messageDirTablePath: String = path + "message_dir/"
   val messageTablePath: String = path + "message/"
